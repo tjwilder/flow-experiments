@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bf4io3ajvtpkt"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ruy2f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ecff1"]
+
+[node name="Wall" type="StaticBody2D"]
+position = Vector2(500, 600)
+collision_layer = 257
+collision_mask = 257
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+scale = Vector2(20, 20)
+mesh = SubResource("SphereMesh_ruy2f")
+metadata/touched = []
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ecff1")

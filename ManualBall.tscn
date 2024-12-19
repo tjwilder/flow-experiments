@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://ci0vm0k0dki55"]
+
+[ext_resource type="Script" path="res://manual_ball.gd" id="1_rvmaq"]
+
+[sub_resource type="ShaderMaterial" id="7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1l0ia"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_6crk7"]
+
+[node name="Manual Ball" type="Area2D"]
+show_behind_parent = true
+material = SubResource("7")
+collision_layer = 3
+script = ExtResource("1_rvmaq")
+metadata/touched = []
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1l0ia")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.145098)
+scale = Vector2(20, 20)
+mesh = SubResource("SphereMesh_6crk7")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

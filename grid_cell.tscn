@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cv8038lr7x1fq"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_20w5n"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_o00br"]
+
+[node name="grid_cell" type="MeshInstance2D"]
+modulate = Color(1, 1, 1, 0.25098)
+self_modulate = Color(0, 0, 0, 1)
+scale = Vector2(100, 100)
+mesh = SubResource("BoxMesh_20w5n")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+rotation = 0.148353
+scale = Vector2(0.2, 0.465)
+mesh = SubResource("PrismMesh_o00br")

@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://bse42m22b0f45"]
+
+[ext_resource type="Script" path="res://Sink.gd" id="1_auqi6"]
+
+[sub_resource type="ShaderMaterial" id="7"]
+
+[sub_resource type="RectangleShape2D" id="6"]
+
+[sub_resource type="QuadMesh" id="5"]
+
+[node name="Sink" type="Area2D"]
+show_behind_parent = true
+material = SubResource("7")
+position = Vector2(438, 444)
+script = ExtResource("1_auqi6")
+metadata/multiplier = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(25, 1)
+shape = SubResource("6")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.145098)
+scale = Vector2(500, 20)
+mesh = SubResource("5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

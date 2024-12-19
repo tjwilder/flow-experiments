@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcidwja42rdtw"]
+
+[sub_resource type="SphereMesh" id="4"]
+
+[sub_resource type="CircleShape2D" id="1"]
+
+[node name="Ball" type="RigidBody2D"]
+linear_damp = 1.474
+metadata/touched = []
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(0, -100)
+scale = Vector2(40, 40)
+mesh = SubResource("4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -100)
+scale = Vector2(2, 2)
+shape = SubResource("1")

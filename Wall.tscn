@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://dowsk741t0h7e"]
+
+[sub_resource type="QuadMesh" id="5"]
+
+[sub_resource type="RectangleShape2D" id="6"]
+
+[node name="Wall" type="StaticBody2D"]
+position = Vector2(500, 600)
+collision_layer = 257
+collision_mask = 257
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+scale = Vector2(20, 20)
+mesh = SubResource("5")
+metadata/touched = []
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("6")
