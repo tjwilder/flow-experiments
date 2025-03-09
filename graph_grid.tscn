@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwwy1h0fxy1mb"]
+
+[ext_resource type="Script" path="res://graph_grid.gd" id="1_b51o4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_20w5n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qe0ky"]
+size = Vector2(1, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_o00br"]
+
+[node name="grid_cell" type="MeshInstance2D"]
+modulate = Color(1, 1, 1, 0.25098)
+self_modulate = Color(0, 0, 0, 1)
+scale = Vector2(100, 100)
+mesh = SubResource("BoxMesh_20w5n")
+script = ExtResource("1_b51o4")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(4.54747e-17, 4.76837e-09)
+shape = SubResource("RectangleShape2D_qe0ky")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+rotation = 0.148353
+scale = Vector2(0.2, 0.465)
+mesh = SubResource("PrismMesh_o00br")
+
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
