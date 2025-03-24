@@ -2,8 +2,3 @@ res://default_env.tres
 res://ZGraph.tscn
 res://graph_grid.gd
 res://Source.gd
-res://bouncer.gd
-res://flow_grid.gd
-res://manual_ball.gd
-res://MultiplyArea.gd
-res://Sink.gd

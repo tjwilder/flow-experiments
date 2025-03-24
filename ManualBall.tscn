@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ci0vm0k0dki55"]
 
-[ext_resource type="Script" path="res://manual_ball.gd" id="1_rvmaq"]
+[ext_resource type="Script" uid="uid://crvkydtla0fqx" path="res://manual_ball.gd" id="1_rvmaq"]
 
 [sub_resource type="ShaderMaterial" id="7"]
 

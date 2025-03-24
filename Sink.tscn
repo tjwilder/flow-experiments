@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bse42m22b0f45"]
 
-[ext_resource type="Script" path="res://Sink.gd" id="1_auqi6"]
+[ext_resource type="Script" uid="uid://dhkauteyeekgo" path="res://Sink.gd" id="1_auqi6"]
 
 [sub_resource type="ShaderMaterial" id="7"]
 

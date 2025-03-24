@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://2i227331aibu"]
 
-[ext_resource type="Script" path="res://bouncer.gd" id="1_4ja1v"]
+[ext_resource type="Script" uid="uid://c7pnggg6hixu" path="res://bouncer.gd" id="1_4ja1v"]
 
 [sub_resource type="ShaderMaterial" id="7"]
 

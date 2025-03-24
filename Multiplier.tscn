@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c40oerscoujvj"]
 
-[ext_resource type="Script" path="res://MultiplyArea.gd" id="1_80pev"]
+[ext_resource type="Script" uid="uid://bkqyoubboc2p1" path="res://MultiplyArea.gd" id="1_80pev"]
 
 [sub_resource type="ShaderMaterial" id="7"]
 

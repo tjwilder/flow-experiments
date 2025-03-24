@@ -61,10 +61,10 @@ var temperature_diffs = []
 var mana_velocity = []
 var to_delete = []
 var to_merge = []
-@export var speed = 200
+@export var speed = 1
 @export var max_mana_age = 10
 
-@export var temperature_magnitude = .00000002
+@export var temperature_speed_percentage = .10
 @export var temperature_distance = 50
 @export var temperature_drop_rate = .1
 @export var temperature_easing_constant = 1 # SEE: https://byteatatime.dev/posts/easings/
@@ -76,6 +76,8 @@ var start_pos = null
 var end_pos = null
 var mode = "NONE"
 var selected_point = -1
+
+var base_energy = 0.5 * circle_radius * speed**2 # originally 15
 
 func spawn_particle_at(ind: int, target: int, prev_size: float=circle_radius, age: float=0, prev_density: float=1, prev_temperature: float=0):
 	targets.append(target)
@@ -109,13 +111,14 @@ func _process(delta: float) -> void:
 			
 		# Travel each position along the path
 		mana_velocity = []
+		temperature_diffs = []
 		var i = 0
 		while i < cur_positions.size():
 			# Total dist to the target point
 			var origin = cur_positions[i]
 			var dist = points[targets[i]] - cur_positions[i]
 			var dir = dist.normalized()
-			var rem_dist = delta * speed
+			var rem_dist = delta * speed * 100
 			while rem_dist > dist.length():
 				rem_dist -= dist.length()
 				cur_positions[i] = points[targets[i]]
@@ -136,9 +139,9 @@ func _process(delta: float) -> void:
 			cur_positions[i] += rem_dist * dir
 			var total_movement = cur_positions[i] - origin
 			mana_velocity.append(total_movement / delta)
+			temperature_diffs.append(0)
 			i = i + 1
 			
-		temperature_diffs = []
 		# Calculate tempearture differences and merges
 		i = 0
 		while i < cur_positions.size():
@@ -150,10 +153,10 @@ func _process(delta: float) -> void:
 				if i == j:
 					continue
 				var dist = cur_positions[j] - cur_positions[i]
-				var direction_combo = (mana_velocity[i].dot(mana_velocity[j])) / (speed ** 2)
+				var direction_combo = (mana_velocity[i].normalized().dot(mana_velocity[j].normalized())) / ((100 * speed) ** 2)
 				var distance = abs(dist.length() - temperature_distance)
 				if (dist.length() < mana_size[i] + mana_size[j]) and (mana_size[i] > mana_size[j] or (i < j and mana_size[i] == mana_size[j])):
-					# They must be moving towards the same point or one just left it
+					# They must be moving towards the same point
 					if targets[i] == targets[j]:
 						#print(dist.normalized(), ": ", mana_velocity[j].normalized(), " - ", mana_velocity[i].normalized(), " :: ", dist.normalized().dot(mana_velocity[j].normalized()), ", ", (-dist.normalized()).dot(mana_velocity[i].normalized()))
 						# merge the particles into the bigger one
@@ -173,9 +176,13 @@ func _process(delta: float) -> void:
 				var temperature_effect = temperature_distance_effect * direction_combo * (mana_size[j] / circle_radius) * temperature_stream_effect
 				#if i == 0:
 					#print(dist.length(), " ", direction_combo, " ", temperature_distance_effect, " ", temperature_stream_effect, " ", temperature_effect)
-				temperature_diff += temperature_effect * delta
-			mana_temperature[i] += temperature_magnitude * temperature_diff
-			temperature_diffs.append(temperature_magnitude * temperature_diff)
+				temperature_diff = temperature_effect * delta
+				var speed_drop = temperature_effect * delta * temperature_speed_percentage * mana_velocity[i]
+				var energy_diff = 0.5 * mana_density[i] * mana_size[i] * (mana_velocity[i].length()**2 - (mana_velocity[i] - speed_drop).length()**2)
+				mana_temperature[j] += energy_diff
+				temperature_diffs[j] += energy_diff
+				mana_velocity[i] -= speed_drop
+				#print(mana_velocity[i].length())
 			i = i + 1
 		
 		queue_redraw()
@@ -259,9 +266,20 @@ func _draw():
 		var i = to_merge[0].x
 		var j = to_merge[0].y
 		var weight = mana_size[i]**2 * mana_density[i] / (mana_size[i]**2 * mana_density[i] + mana_size[j]**2 * mana_density[j])
+		var collision_angle_factor = (cur_positions[i] - points[targets[i]]).normalized().dot((cur_positions[j] - points[targets[j]]).normalized())
 		mana_age[i] = weight * mana_age[i] + (1 - weight) * mana_age[j]
-		mana_size[i] = sqrt(mana_size[i]**2 + mana_size[j]**2)
-		mana_density[i] = weight * mana_density[i] + (1 - weight) * mana_density[j]
+		var new_mass = (mana_size[i]**2 * mana_density[i]) + mana_size[j]**2 * mana_density[j]
+		# Scale [-1, 1] to [1, 0]
+		var density_factor = (-collision_angle_factor + 1) / 2
+		var max_size = sqrt(mana_size[i]**2 + mana_size[j]**2)
+		print(max_size, ": ", mana_size[i], ", ", mana_size[j])
+		var min_density = new_mass / (max_size**2)
+		var max_density = max(min_density, 0.9 * new_mass / max(mana_size[i], mana_size[j])**2)
+		assert(max_density > min_density, "Min and max density are both " + str(min_density))
+		#var min_density = weight * mana_density[i] + (1 - weight) * mana_density[j]
+		mana_density[i] = lerp(min_density, max_density, density_factor)
+		mana_size[i] = sqrt(new_mass / mana_density[i])
+		print("::", min_density, ": ", max_density, ", ", mana_density[i], " -- ", mana_size[i])
 		mana_temperature[i] = weight * mana_temperature[i] + (1 - weight) * mana_temperature[j]
 		to_merge.remove_at(0)
 		to_delete.append(j)
@@ -276,7 +294,7 @@ func _draw():
 			# TODO: maybe draw arrows for directional?
 	for i in range(cur_positions.size()):
 		#var color = lerp(Color.WHITE, Color.BLACK, mana_age[i] / max_mana_age)
-		var temp = (mana_temperature[i])
+		var temp = (mana_temperature[i] / base_energy)
 		var color = lerp(Color.WHITE, Color.RED, temp)
 		if temp < 0:
 			color = lerp(Color.BLUE, Color.WHITE, -temp)
