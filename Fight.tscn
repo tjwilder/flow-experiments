@@ -1,0 +1,116 @@
+[gd_scene load_steps=14 format=3 uid="uid://b8sh0s1oreapt"]
+
+[ext_resource type="Script" path="res://character_controller.gd" id="1_388va"]
+
+[sub_resource type="Animation" id="Animation_3wofm"]
+resource_name = "attack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arm:rotation")
+tracks/0/interp = 4
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.466667, 0.7, 1),
+"transitions": PackedFloat32Array(1, 0.482968, 2.07053, 1.56917),
+"update": 0,
+"values": [0.0, 0.574213, -0.701622, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_gbfmn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arm:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4wwg7"]
+_data = {
+"RESET": SubResource("Animation_gbfmn"),
+"attack": SubResource("Animation_3wofm")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p4dd7"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_mliil"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_m1bog"]
+radius = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_aek34"]
+
+[sub_resource type="Gradient" id="Gradient_jaw0d"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_2qrju"]
+gradient = SubResource("Gradient_jaw0d")
+
+[sub_resource type="PrismMesh" id="PrismMesh_kya3u"]
+left_to_right = 0.0
+
+[sub_resource type="Gradient" id="Gradient_4l18o"]
+offsets = PackedFloat32Array(0.675949, 0.982278, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.0278481, 0.0278481, 0.0278481, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gguql"]
+gradient = SubResource("Gradient_4l18o")
+
+[node name="Fight" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(396, 225)
+scale = Vector2(40, 40)
+motion_mode = 1
+script = ExtResource("1_388va")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D"]
+libraries = {
+"": SubResource("AnimationLibrary_4wwg7")
+}
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CharacterBody2D"]
+material = SubResource("ShaderMaterial_p4dd7")
+mesh = SubResource("SphereMesh_mliil")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CircleShape2D_m1bog")
+
+[node name="Arm" type="Node2D" parent="CharacterBody2D"]
+position = Vector2(-0.02, 0.47)
+
+[node name="Weapon" type="Node2D" parent="CharacterBody2D/Arm"]
+position = Vector2(0, 0.4)
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CharacterBody2D/Arm/Weapon"]
+position = Vector2(0.0650001, 0)
+scale = Vector2(1.01, 0.1)
+mesh = SubResource("QuadMesh_aek34")
+
+[node name="Blade" type="Node2D" parent="CharacterBody2D/Arm/Weapon"]
+position = Vector2(0.53, 2.98023e-08)
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CharacterBody2D/Arm/Weapon/Blade"]
+position = Vector2(0.9025, 0.0199999)
+rotation = -1.5708
+scale = Vector2(0.32, 1.775)
+mesh = SubResource("QuadMesh_aek34")
+texture = SubResource("GradientTexture1D_2qrju")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="CharacterBody2D/Arm/Weapon/Blade"]
+position = Vector2(1.97917, 0.0195834)
+rotation = -1.5708
+scale = Vector2(0.320001, 0.380333)
+mesh = SubResource("PrismMesh_kya3u")
+texture = SubResource("GradientTexture1D_gguql")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CharacterBody2D/Arm"]
+position = Vector2(0, 0.25)
+scale = Vector2(0.1, 0.5)
+mesh = SubResource("QuadMesh_aek34")

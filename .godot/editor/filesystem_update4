@@ -2,3 +2,6 @@ res://default_env.tres
 res://ZGraph.tscn
 res://graph_grid.gd
 res://Source.gd
+res://Fight.tscn
+res://Ball.tscn
+res://character_controller.gd
